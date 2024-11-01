@@ -8,6 +8,12 @@ const errorHandlerMiddleware = (err, req, res, next) => {
          err.message = `Duplicate Field Value Enter`;
          err.statusCode = 400;  // bad request
      }
+
+      // JWT Error
+    if (err.name === 'JsonWebTokenError') {
+        const message = 'Invalid token';
+        err = new ErrorHandler(message, 401);
+    }
      */
     //  create your own custom errors with status code 
     res.status(err.statusCode).send({

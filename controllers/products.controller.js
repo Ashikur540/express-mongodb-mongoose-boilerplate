@@ -14,21 +14,17 @@ export const getAllProducts = catchAsyncError(
     }
 )
 
-
-export const getProductById = catchAsyncError(
-    async (req, res, next) => {
-
-        const product = await Product.findById(req.params.id);
-        if (product) {
-            res.json(product);
-        } else {
-            // To provide custom error message return error to the global error handler middleware with formatted error message using ErrorHandler class
-            return next(new ErrorHandler(`Product not found with id: ${req.params.id}`, 404));
-        }
-
-
+export const getProductById = catchAsyncError(async (req, res, next) => {
+    const product = await Product.findById(req.params.id);
+    
+    if (!product) {
+        // If product not found, return error immediately
+        return next(new ErrorHandler(`Product not found with id: ${req.params.id}`, 404));
     }
-)
+    
+    // If product exists, send response
+    res.json(product);
+});
 
 
 
@@ -45,9 +41,7 @@ export const addNewProduct = catchAsyncError(
 
         const newProduct = await product.save();
         if (newProduct)
-            res.status(201).json(newProduct);
-
-       
+            res.status(201).json(newProduct);  
 
     }
 )
